@@ -94,6 +94,21 @@ public final class IvyAuthenticator extends Authenticator {
             }
         }
 
+        if (result == null) {
+            String userInfo = getRequestingURL().getUserInfo();
+            if (userInfo != null) {
+                String username = userInfo;
+                String password = null;
+
+                int colonAt = userInfo.indexOf(':');
+                if (colonAt != -1) {
+                    username = userInfo.substring(0, colonAt);
+                    password = userInfo.substring(colonAt + 1);
+                    result = new PasswordAuthentication(username, password.toCharArray());
+                }
+            }
+        }
+
         if (result == null && original != null) {
             Authenticator.setDefault(original);
             try {
