@@ -379,7 +379,16 @@ public class HttpClientHandler extends AbstractURLHandler implements TimeoutCons
             final String host = authscope.getHost();
             final org.apache.ivy.util.Credentials ivyConfiguredCred = CredentialsStore.INSTANCE.getCredentials(realm, host);
             if (ivyConfiguredCred == null) {
-                return null;
+                AuthScope match = null;
+                int scoreMax = -1;
+                for (AuthScope key : cachedCreds.keySet()) {
+                    int score = authscope.match(key);
+                    if (score > scoreMax) {
+                        scoreMax = score;
+                        match = key;
+                    }
+                }
+                return match != null ? cachedCreds.get(match) : null;
             }
             return createCredentials(ivyConfiguredCred.getUserName(), ivyConfiguredCred.getPasswd());
         }

@@ -177,3 +177,4 @@ public final class IvyAuthenticator extends Authenticator {
         return major == 1 ? Integer.parseInt(version[1]) : major;
     }
 }
+
